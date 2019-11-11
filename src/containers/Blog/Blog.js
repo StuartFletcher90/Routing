@@ -37,12 +37,13 @@ class Blog extends Component {
                     <Switch>
                         <Route path="/new-post" exact component={NewPost} />
                     </Switch>
-                    //? No longer need the Switch statement as we only have one Route remaining,
-                    //? and our Posts and NewPost will not conflict due to being seperate.
+                
                 </section>
             </div>
         );
     }
 }
 
+// No longer need to use the switch statement due to only having one Route.
+// Posts and NewPost will no cause conflicts due to being seperate Routes.
 export default Blog;
