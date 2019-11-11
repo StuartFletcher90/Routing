@@ -1,53 +1,44 @@
 import React, { Component } from 'react';
 // import axios from 'axios';
-import axios from '../../axios';
-import { Route } from 'react-router-dom';
+import { Route, NavLink, Switch
+ } from 'react-router-dom';
+
 import './Blog.css';
+import Posts from './Posts/Posts';
+import NewPost from '../Blog/NewPost/NewPost';
+import FullPost from './FullPost/FullPost';
 
 class Blog extends Component {
-    state = {
-        posts: [],
-        selectedPostId: null,
-        error: false
-    }
-
-    componentDidMount () {
-        axios.get( '/posts' )
-            .then( response => {
-                const posts = response.data.slice(0, 4);
-                const updatedPosts = posts.map(post => {
-                    return {
-                        ...post,
-                        author: 'Stuart'
-                    }
-                });
-                this.setState({posts: updatedPosts});
-                // console.log( response );
-            } )
-            .catch(error => {
-                // console.log(error);
-                this.setState({error: true});
-            });
-    }
-
-    postSelectedHandler = (id) => {
-        this.setState({selectedPostId: id});
-    }
 
     render () {
         
+
         return (
             <div className="Blog">
                 <header>
                     <nav>
                         <ul>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/new-post">New Post</a></li>
+                            <li><NavLink to="/" exact activeClassName="my-active" activeStyle={{
+                                color: '#fa923f',
+                                textDecoration: 'underline'
+                            }}>Posts</NavLink></li>
+                            <li><NavLink to={{
+                                pathname: '/new-post',
+                                hash: '#bants',
+                                search: '?quick-submit=true'
+                            }}>New Post</NavLink></li>
                         </ul>
                     </nav>
                 </header>
-                <section className="Posts">
-                    <Route path="/" exact render={() => <h1>Home</h1>} />
+                <section className="Posts"> 
+                <Route path="/" exact component={Posts} />
+                    {/* <Route path="/" exact render={() => <h1>Welcome to my blog page :3</h1>} /> */}
+                    {/* <Route path="/new-post" exact render={() => <h1>New Posts</h1>} /> */}
+                    <Switch>
+                        <Route path="/new-post" exact component={NewPost} />
+                    </Switch>
+                    //? No longer need the Switch statement as we only have one Route remaining,
+                    //? and our Posts and NewPost will not conflict due to being seperate.
                 </section>
             </div>
         );
