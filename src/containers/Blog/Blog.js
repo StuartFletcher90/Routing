@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 // import axios from 'axios';
-import { Route, NavLink, Switch
- } from 'react-router-dom';
-
+import { Route, NavLink, Switch} from 'react-router-dom';
+//! Import redirect if needed
 import './Blog.css';
 import Posts from './Posts/Posts';
-import NewPost from '../Blog/NewPost/NewPost';
-import FullPost from './FullPost/FullPost';
+import asyncComponent from '../../hoc/asyncComponent';
+// import NewPost from './NewPost/NewPost';
+
+
+const AsyncNewPost = asyncComponent(() => {
+    return import('./NewPost/NewPost');
+});
+//! Creates a new bundle component within our hoc, loading our components asynchronously
+//! Super useful for bigger apps.
 
 class Blog extends Component {
+    state = {
+        auth: true
+    }
 
     render () {
         
@@ -18,7 +27,7 @@ class Blog extends Component {
                 <header>
                     <nav>
                         <ul>
-                            <li><NavLink to="/" exact activeClassName="my-active" activeStyle={{
+                            <li><NavLink to="/posts/" exact activeClassName="my-active" activeStyle={{
                                 color: '#fa923f',
                                 textDecoration: 'underline'
                             }}>Posts</NavLink></li>
@@ -30,20 +39,18 @@ class Blog extends Component {
                         </ul>
                     </nav>
                 </header>
-                <section className="Posts"> 
-                <Route path="/" exact component={Posts} />
                     {/* <Route path="/" exact render={() => <h1>Welcome to my blog page :3</h1>} /> */}
                     {/* <Route path="/new-post" exact render={() => <h1>New Posts</h1>} /> */}
-                    <Switch>
-                        <Route path="/new-post" exact component={NewPost} />
+                    <Switch>                        
+                        {this.state.auth ? <Route path="/new-post" exact component={AsyncNewPost} /> : null}
+                        <Route path="/posts" component={Posts} />
+                        <Route render ={() => <h1>Not Found</h1>} />
+                        {/* <Redirect from="/" to="/posts" /> */}
+                        {/* <Route path="/" component={Posts} /> */}
                     </Switch>
-                
-                </section>
             </div>
         );
     }
 }
 
-// No longer need to use the switch statement due to only having one Route.
-// Posts and NewPost will no cause conflicts due to being seperate Routes.
 export default Blog;
